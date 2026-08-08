@@ -1,13 +1,14 @@
 import assert from 'node:assert/strict';
 import { access, readFile, readdir, rm } from 'node:fs/promises';
 import path from 'node:path';
-import { spawn } from 'node:child_process';
+import { execFile, spawn } from 'node:child_process';
+import { promisify } from 'node:util';
 import test from 'node:test';
 import { REPOSITORY_ROOT } from '../helpers/workspace.mjs';
 
 const RELEASE_ROOT = path.join(REPOSITORY_ROOT, 'release');
 const PRODUCT_RELEASE = path.join(RELEASE_ROOT, 'Huajuan-Harness');
-const ZIP_RELEASE = path.join(RELEASE_ROOT, 'Huajuan-Harness-v0.6.0.zip');
+const ZIP_RELEASE = path.join(RELEASE_ROOT, 'Huajuan-Harness-v0.6.1.zip');
 const EXPECTED_TOP_LEVEL = [
   '.harness',
   '打开花卷控制台.html',
@@ -24,6 +25,7 @@ const FORBIDDEN_NAMES = new Set([
   'scripts',
   'tests',
 ]);
+const execFileAsync = promisify(execFile);
 
 async function runNode(script) {
   const child = spawn(process.execPath, [path.join(REPOSITORY_ROOT, script)], {
@@ -58,6 +60,18 @@ test('release builder emits a verified runtime-only directory and ZIP', async t 
   t.after(async () => { await rm(RELEASE_ROOT, { recursive: true, force: true }); });
 
   await runNode('scripts/build-release.mjs');
+  const pythonExecutable = process.env.HUAJUAN_BUILD_PYTHON || (process.platform === 'win32' ? 'python' : 'python3');
+  const metadataProgram = 'import json,sys,zipfile; z=zipfile.ZipFile(sys.argv[1]); print(json.dumps([{"name":i.filename,"flags":i.flag_bits} for i in z.infolist()], ensure_ascii=False)); z.close()';
+  const zipMetadata = await execFileAsync(pythonExecutable, ['-c', metadataProgram, ZIP_RELEASE], { encoding: 'utf8' });
+  const zipRecords = JSON.parse(zipMetadata.stdout);
+  for (const name of [
+    'Huajuan-Harness/花卷初始化器-Windows.cmd',
+    'Huajuan-Harness/花卷初始化器-macOS.command',
+  ]) {
+    const record = zipRecords.find(item => item.name === name);
+    assert.ok(record, `ZIP 缺少 ${name}`);
+    assert.notEqual(record.flags & 0x800, 0, `${name} 缺少 UTF-8 文件名标记`);
+  }
   const verification = await runNode('scripts/verify-release.mjs');
   assert.match(verification.stdout, /父目录安装冒烟通过/);
   assert.match(verification.stdout, /知识门禁冒烟通过/);
@@ -72,6 +86,6 @@ test('release builder emits a verified runtime-only directory and ZIP', async t 
   assert.doesNotMatch(dashboard, new RegExp(REPOSITORY_ROOT.replaceAll(/[.*+?^${}()|[\]\\]/g, '\\$&')));
 
   const marker = JSON.parse(await readFile(path.join(PRODUCT_RELEASE, '.harness', '.huajuan.json'), 'utf8'));
-  assert.equal(marker.version, '0.6.0');
+  assert.equal(marker.version, '0.6.1');
   assert.ok(Object.keys(marker.managedHashes).length >= 30);
 });

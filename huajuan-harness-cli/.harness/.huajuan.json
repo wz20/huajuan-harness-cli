@@ -1,6 +1,6 @@
 {
   "product": "huajuan-harness",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "schema": 4,
   "harnessRoot": ".harness",
   "runtimeFiles": [
@@ -57,7 +57,7 @@
     "templates/KNOWLEDGE_SIDECAR.md"
   ],
   "managedHashes": {
-    ".huajuan.mjs": "6c6c90db756ca0c2464f1c25aa87cd08c2d041f0a0d974eece095ff73c912f3e",
+    ".huajuan.mjs": "bf9df0a0a4909c179cb0d703292c9d1fc475fbd8020bd71c2a42d57ddf7610df",
     "CORE.md": "d1b909942a5ce6447b13440dff594709247a7209a1018830a4af3b7387aeb367",
     "SYSTEM_PROMPT.md": "fae2126e98ff10d78a83323c77f9fb7a4ae4b2ca70d5de5d148e421ca3553b13",
     "STRUCTURE.md": "e2918999512d7e8ebeb5b49e5d3b87ecc7ee452c23e7ae7045079dd3229cad22",

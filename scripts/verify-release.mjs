@@ -9,7 +9,7 @@ const scriptRoot = path.dirname(fileURLToPath(import.meta.url));
 const repositoryRoot = path.resolve(scriptRoot, '..');
 const releaseRoot = path.join(repositoryRoot, 'release');
 const releaseProduct = path.join(releaseRoot, 'Huajuan-Harness');
-const releaseZip = path.join(releaseRoot, 'Huajuan-Harness-v0.6.0.zip');
+const releaseZip = path.join(releaseRoot, 'Huajuan-Harness-v0.6.1.zip');
 const harnessRoot = path.join(releaseProduct, '.harness');
 const expectedTopLevel = [
   '.harness',
@@ -121,7 +121,7 @@ if (process.platform !== 'win32') {
 }
 
 const marker = JSON.parse(await readFile(path.join(harnessRoot, '.huajuan.json'), 'utf8'));
-if (marker.product !== 'huajuan-harness' || marker.version !== '0.6.0' || marker.schema !== 4 || marker.harnessRoot !== '.harness') {
+if (marker.product !== 'huajuan-harness' || marker.version !== '0.6.1' || marker.schema !== 4 || marker.harnessRoot !== '.harness') {
   fail('Marker 产品、版本、Schema 或 Harness 根目录无效。');
 }
 const dynamicManagedFiles = new Set(['dashboard.html']);
@@ -151,12 +151,21 @@ if (doctor.code !== 0) fail(`Doctor 未通过。\n${doctor.stderr || doctor.stdo
 const doctorReport = JSON.parse(doctor.stdout);
 if (!doctorReport.ok || doctorReport.counts.error !== 0) fail('Doctor 报告包含错误。');
 
-const zipListResult = await run('unzip', ['-Z1', releaseZip], { cwd: releaseRoot });
-if (zipListResult.code !== 0) fail(`ZIP 无法读取。\n${zipListResult.stderr}`);
-const zipEntries = zipListResult.stdout.split(/\r?\n/).filter(Boolean);
+const pythonExecutable = process.env.HUAJUAN_BUILD_PYTHON || (process.platform === 'win32' ? 'python' : 'python3');
+const metadataProgram = 'import json,sys,zipfile; z=zipfile.ZipFile(sys.argv[1]); print(json.dumps([{"name":i.filename,"flags":i.flag_bits} for i in z.infolist()], ensure_ascii=False)); z.close()';
+const zipMetadataResult = await run(pythonExecutable, ['-c', metadataProgram, releaseZip], { cwd: releaseRoot });
+if (zipMetadataResult.code !== 0) fail(`ZIP 元数据无法读取。\n${zipMetadataResult.stderr}`);
+const zipRecords = JSON.parse(zipMetadataResult.stdout);
+const zipEntries = zipRecords.map(record => record.name);
 if (!zipEntries.length || zipEntries.some(entry => !entry.startsWith('Huajuan-Harness/'))) {
   fail('ZIP 必须且只能包含 Huajuan-Harness 根目录。');
 }
+for (const relative of requiredRuntimePaths) {
+  const expected = `Huajuan-Harness/${relative}`;
+  if (!zipEntries.includes(expected)) fail(`ZIP 缺少运行文件 ${expected}`);
+}
+const malformedUnicode = zipRecords.filter(record => /[^\x00-\x7f]/.test(record.name) && (record.flags & 0x800) === 0);
+if (malformedUnicode.length) fail(`ZIP 中文路径缺少 UTF-8 标记：${malformedUnicode.map(item => item.name).join('、')}`);
 const forbiddenZipEntries = zipEntries.filter(entry => entry.split('/').some(part => forbiddenNames.has(part)));
 if (forbiddenZipEntries.length) fail(`ZIP 包含禁止项：${forbiddenZipEntries.join('、')}`);
 

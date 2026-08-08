@@ -1,6 +1,6 @@
 # 技术设计
 
-版本：Runtime v0.6.0 / Workspace Schema v4
+版本：Runtime v0.6.1 / Workspace Schema v4
 
 ## 1. 架构
 

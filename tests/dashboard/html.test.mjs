@@ -3,7 +3,7 @@ import test from 'node:test';
 import { importCli } from '../helpers/workspace.mjs';
 
 const dashboardData = {
-  product: 'huajuan-harness', version: '0.6.0', generatedAt: '2026-08-07T00:00:00.000Z',
+  product: 'huajuan-harness', version: '0.6.1', generatedAt: '2026-08-07T00:00:00.000Z',
   workspace: { name: '花卷知识库', mode: 'hybrid', modeLabel: '连接项目工作与长期知识', status: 'awaiting-agent', owner: 'Ze', notes: '' },
   counts: { relations: 1, unresolved: 0, userAssets: 2, systemAssets: 15, proposals: 1, doctorIssues: 0, mcpServers: 0 },
   lifecycle: { candidate: 1, active: 1, deprecated: 0, proposed: 1, applied: 0, rejected: 0 },

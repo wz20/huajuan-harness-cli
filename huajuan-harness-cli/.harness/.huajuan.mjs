@@ -22,7 +22,7 @@ import { createInterface } from 'node:readline/promises';
 import { fileURLToPath } from 'node:url';
 import { spawn } from 'node:child_process';
 
-export const VERSION = '0.6.0';
+export const VERSION = '0.6.1';
 export const SCHEMA = 4;
 export const WORKSPACE_SCHEMA = 'huajuan-workspace/v4';
 export const PRODUCT = 'huajuan-harness';

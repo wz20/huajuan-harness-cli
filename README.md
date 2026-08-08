@@ -177,6 +177,8 @@ npm run verify:release
 
 Release 校验会真实解压 ZIP，在一个含已有文件的中文工作区中运行父目录启动器，并验证 WorkBuddy、Doctor、首次 `BLOCKED` 和提前入库拒绝。
 
+最终用户只需要 Node.js 20+；从源码构建 Release 另外需要 Python 3，用于生成带标准 UTF-8 文件名标记的跨平台 ZIP。
+
 更多信息：
 
 - [产品需求](docs/PRODUCT-REQUIREMENTS.md)
@@ -184,4 +186,4 @@ Release 校验会真实解压 ZIP，在一个含已有文件的中文工作区�
 - [开发与验收](docs/DEVELOPMENT.md)
 - [产品决策与非目标](docs/DECISIONS.md)
 - [参考项目](docs/REFERENCES.md)
-- [v0.6.0 发布验收](docs/releases/v0.6.0.md)
+- [v0.6.1 发布验收](docs/releases/v0.6.1.md)

@@ -8,7 +8,7 @@ const repositoryRoot = path.resolve(scriptRoot, '..');
 const sourceProduct = path.join(repositoryRoot, 'huajuan-harness-cli');
 const releaseRoot = path.join(repositoryRoot, 'release');
 const releaseProduct = path.join(releaseRoot, 'Huajuan-Harness');
-const releaseZip = path.join(releaseRoot, 'Huajuan-Harness-v0.6.0.zip');
+const releaseZip = path.join(releaseRoot, 'Huajuan-Harness-v0.6.1.zip');
 const releaseAllowlist = [
   '.harness',
   '花卷初始化器.app',
@@ -76,6 +76,8 @@ if (process.platform !== 'win32') {
 
 // 在干净的 Release 树中生成快照，避免把开发目录或系统垃圾文件带入看板数据。
 await run(process.execPath, [path.join(releaseProduct, '.harness', '.huajuan.mjs'), 'dashboard', '--workspace', releaseProduct], { cwd: releaseProduct });
-await run('zip', ['-qry', releaseZip, path.basename(releaseProduct)], { cwd: releaseRoot });
+// Python 标准库会为非 ASCII 路径写入 ZIP UTF-8 标记，避免跨平台解压乱码。
+const pythonExecutable = process.env.HUAJUAN_BUILD_PYTHON || (process.platform === 'win32' ? 'python' : 'python3');
+await run(pythonExecutable, [path.join(scriptRoot, 'create-release-zip.py'), releaseProduct, releaseZip], { cwd: releaseRoot });
 
 process.stdout.write(`Release 已生成：${releaseProduct}\nZIP 已生成：${releaseZip}\n`);

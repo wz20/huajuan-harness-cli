@@ -1,6 +1,6 @@
 # 开发与验收
 
-版本：v0.6.0
+版本：v0.6.1
 
 ## 已实现范围
 
@@ -18,6 +18,8 @@
 - Release 构建与内容验证。
 
 ## 开发验证
+
+Runtime 只要求 Node.js 20+。构建 Release 还需要 Python 3，用于生成带 UTF-8 文件名标记的 ZIP。
 
 ```text
 npm test
@@ -67,4 +69,4 @@ node --test tests/dashboard/browser.test.mjs
 5. Release Verify 必须确认禁止项为零。
 6. 对概念图、桌面截图和移动截图完成视觉差异记录。
 
-逐项验收结果见 `docs/releases/v0.6.0.md`。
+逐项验收结果见 `docs/releases/v0.6.1.md`。
