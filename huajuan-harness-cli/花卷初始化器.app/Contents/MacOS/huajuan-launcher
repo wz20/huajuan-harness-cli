@@ -1,0 +1,92 @@
+#!/bin/sh
+set -eu
+
+show_error() {
+  message=$1
+  printf '%s\n' "$message" >&2
+  if [ "${HUAJUAN_TEST_DIRECT:-0}" != "1" ] && command -v /usr/bin/osascript >/dev/null 2>&1; then
+    /usr/bin/osascript - "$message" <<'APPLESCRIPT' >/dev/null 2>&1 || true
+on run argv
+  display dialog (item 1 of argv) buttons {"好"} default button "好" with icon stop
+end run
+APPLESCRIPT
+  fi
+}
+
+find_node() {
+  if [ -n "${HUAJUAN_TEST_NODE:-}" ]; then
+    printf '%s\n' "$HUAJUAN_TEST_NODE"
+    return 0
+  fi
+  login_node=$(/bin/zsh -lc 'command -v node 2>/dev/null || true' 2>/dev/null || true)
+  for candidate in \
+    "$login_node" \
+    /opt/homebrew/bin/node \
+    /usr/local/bin/node \
+    "$HOME/.volta/bin/node" \
+    "$HOME/.asdf/shims/node" \
+    /usr/bin/node
+  do
+    if [ -n "$candidate" ] && [ -x "$candidate" ]; then
+      printf '%s\n' "$candidate"
+      return 0
+    fi
+  done
+  return 1
+}
+
+if [ -n "${HUAJUAN_TEST_WORKSPACE:-}" ]; then
+  PACKAGE_ROOT=$HUAJUAN_TEST_WORKSPACE
+else
+  SCRIPT_DIR=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd -P)
+  PACKAGE_ROOT=$(CDPATH= cd -- "$SCRIPT_DIR/../../.." && pwd -P)
+fi
+CLI="$PACKAGE_ROOT/.harness/.huajuan.mjs"
+MARKER="$PACKAGE_ROOT/.harness/.huajuan.json"
+
+if [ ! -f "$CLI" ] || [ ! -f "$MARKER" ]; then
+  show_error "初始化器安装包缺少完整的 .harness。若 macOS 隔离了 App，请改用同目录的 macOS.command。"
+  exit 1
+fi
+if ! /usr/bin/grep -Eq '"product"[[:space:]]*:[[:space:]]*"huajuan-harness"' "$MARKER"; then
+  show_error "当前 .harness 不是 Huajuan Harness。"
+  exit 1
+fi
+
+NODE=$(find_node || true)
+if [ -z "$NODE" ] || [ ! -x "$NODE" ]; then
+  show_error "未找到 Node.js 20+。请安装后重试。"
+  exit 1
+fi
+NODE_MAJOR=$($NODE -p "Number(process.versions.node.split('.')[0])" 2>/dev/null || printf '0')
+case "$NODE_MAJOR" in
+  ''|*[!0-9]*) NODE_MAJOR=0 ;;
+esac
+if [ "$NODE_MAJOR" -lt 20 ]; then
+  show_error "Node.js 版本过低，需要 20 或更高版本。"
+  exit 1
+fi
+
+cd "$PACKAGE_ROOT"
+if [ "${HUAJUAN_TEST_DIRECT:-0}" = "1" ]; then
+  if [ -n "${HUAJUAN_INIT_ANSWERS_FILE:-}" ]; then
+    exec "$NODE" ".harness/.huajuan.mjs" install-parent --answers "$HUAJUAN_INIT_ANSWERS_FILE"
+  fi
+  exec "$NODE" ".harness/.huajuan.mjs" install-parent
+fi
+
+/usr/bin/osascript - "$NODE" "$PACKAGE_ROOT" "${HUAJUAN_INIT_ANSWERS_FILE:-}" <<'APPLESCRIPT'
+on run argv
+  set nodePath to item 1 of argv
+  set packagePath to item 2 of argv
+  set answersPath to item 3 of argv
+  set commandText to "cd " & quoted form of packagePath & " && " & quoted form of nodePath & " .harness/.huajuan.mjs install-parent"
+  if answersPath is not "" then
+    set commandText to commandText & " --answers " & quoted form of answersPath
+  end if
+  tell application "Terminal"
+    activate
+    do script commandText
+  end tell
+end run
+APPLESCRIPT

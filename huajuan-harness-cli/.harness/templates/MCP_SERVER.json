@@ -1,0 +1,18 @@
+{
+  "schema": "huajuan-mcp-server/v1",
+  "id": "workspace.example",
+  "name": "可读名称",
+  "status": "candidate",
+  "transport": "stdio",
+  "purpose": "说明真实用途",
+  "command": "example-command",
+  "args": [],
+  "capabilities": [],
+  "dataBoundaries": {
+    "reads": [],
+    "writes": [],
+    "externalDestinations": []
+  },
+  "secrets": "external-only",
+  "requiresApproval": true
+}

@@ -1,0 +1,24 @@
+{
+  "name": "huajuan-harness-cli",
+  "version": "0.6.0",
+  "description": "Drop-in Agent Harness for self-evolving local knowledge workspaces.",
+  "private": true,
+  "type": "module",
+  "homepage": "https://github.com/wz20/huajuan-harness-cli#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wz20/huajuan-harness-cli.git"
+  },
+  "bugs": {
+    "url": "https://github.com/wz20/huajuan-harness-cli/issues"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "test": "node --test --test-concurrency=1",
+    "sync:hashes": "node scripts/sync-managed-hashes.mjs",
+    "build:release": "node scripts/build-release.mjs",
+    "verify:release": "node scripts/verify-release.mjs"
+  }
+}

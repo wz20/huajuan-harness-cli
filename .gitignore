@@ -1,0 +1,13 @@
+node_modules/
+dist/
+.tmp/
+/release/
+/artifacts/
+/.superpowers/
+/temp_images/
+/coverage/
+*.log
+.DS_Store
+**/.DS_Store
+huajuan-harness-cli/.harness/state/*.json
+!huajuan-harness-cli/.harness/state/.keep
