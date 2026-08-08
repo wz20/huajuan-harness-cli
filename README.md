@@ -9,9 +9,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/wz20/huajuan-harness-cli/releases/latest">下载最新版</a> ·
-  <a href="docs/PRODUCT-REQUIREMENTS.md">产品设计</a> ·
-  <a href="docs/TECHNICAL-DESIGN.md">技术设计</a>
+  <a href="https://github.com/wz20/huajuan-harness-cli/releases/latest">下载最新版</a>
 </p>
 
 ## 从打开 CLI 到知识库自动进化
@@ -222,34 +220,3 @@ node .harness/.huajuan.mjs uninstall       # 选项式导出与安全卸载
 - 自动进化只能产生候选、Bad Case 和 Proposal；
 - 淘汰使用 `deprecated + superseded_by` 保留历史，不等于删除；
 - 文件系统中的 Markdown 和素材始终是唯一真实数据源。
-
-## 仓库结构
-
-```text
-huajuan-harness-cli/       # 发布包源模板
-scripts/                   # Hash 同步、Release 构建与解压验收
-tests/                     # CLI、Doctor、Dashboard、E2E 与 Release 测试
-docs/                      # 产品、技术、决策与发布说明
-```
-
-## 开发与发布
-
-```bash
-npm test
-npm run sync:hashes
-npm run build:release
-npm run verify:release
-```
-
-Release 校验会真实解压 ZIP，在一个含已有文件的中文工作区中运行父目录启动器，并验证 WorkBuddy、Doctor、首次 `BLOCKED` 和提前入库拒绝。
-
-最终用户只需要 Node.js 20+；从源码构建 Release 另外需要 Python 3，用于生成带标准 UTF-8 文件名标记的跨平台 ZIP。
-
-更多信息：
-
-- [产品需求](docs/PRODUCT-REQUIREMENTS.md)
-- [技术设计](docs/TECHNICAL-DESIGN.md)
-- [开发与验收](docs/DEVELOPMENT.md)
-- [产品决策与非目标](docs/DECISIONS.md)
-- [参考项目](docs/REFERENCES.md)
-- [v0.6.1 发布验收](docs/releases/v0.6.1.md)
