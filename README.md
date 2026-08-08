@@ -9,9 +9,73 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/wz20/huajuan-harness-cli/releases/latest">下载最新版</a> ·
-  <a href="docs/PRODUCT-REQUIREMENTS.md">产品设计</a> ·
-  <a href="docs/TECHNICAL-DESIGN.md">技术设计</a>
+  <a href="https://github.com/wz20/huajuan-harness-cli/releases/latest">下载最新版</a>
+</p>
+
+## 从打开 CLI 到知识库自动进化
+
+下面不是预置测试页或静态效果图，而是一条真实、完整的验收链路：在全新目录运行发布包完成安装，再把 CLI 生成的话术交给 Codex，连续验证自动入库、记忆更新和知识淘汰，最后在 Obsidian 检查实际文件与关系图谱。
+
+### 1. 打开 CLI：自动识别所在工作区
+
+把完整的 `Huajuan-Harness` 文件夹放进工作区后，双击对应系统的启动器即可。CLI 自动管理自身的一级父目录，不要求用户选择或输入路径；每个问题都会说明为什么要问，以及如何选择。
+
+<p align="center">
+  <img src="docs/images/cli-real-start.png" width="860" alt="在真实工作区打开花卷 CLI 的第一屏">
+</p>
+
+### 2. 确认策略：只选择，不猜测
+
+本次演示选择 Codex、开启自动进化、关闭 Proposal 自动应用。CLI 会在落盘前集中显示所有配置；除用户称呼、工作区名称和可选备注外，关键策略都通过选项确定。
+
+<p align="center">
+  <img src="docs/images/cli-real-confirm.png" width="860" alt="花卷 CLI 安装前的真实配置确认页">
+</p>
+
+### 3. 安装完成：得到可直接发给 Codex 的话术
+
+安装后，CLI 写入完整 `.harness`，扫描当前一级目录，并生成一段可直接复制给 Codex 的初始化话术。此时新工作区保持 `awaiting-agent / BLOCKED`，Codex 必须先观察目录、与用户确认六份知识契约并通过门禁，不能在规则尚未明确时直接整理知识。
+
+<p align="center">
+  <img src="docs/images/cli-real-install-complete.png" width="860" alt="花卷 CLI 真实安装完成并输出 Codex 初始化话术">
+</p>
+
+### 4. 自动入库：先核验、再查重、最后更新
+
+发送三条 AI 新闻后，Codex 没有为演示重复造文件，而是复用并更新 12 个现有知识与索引文件。Veo 4 和 Seedance 3 因未找到对应官方发布证据保持 `review`；GPT Image 2 有官方发布页和 API 文档支持，保持 `active`。随后 Knowledge Lint、Doctor 和工作区 `READY` 状态全部通过。
+
+<p align="center">
+  <img src="docs/images/codex-real-demo-result.png" width="1000" alt="Codex 真实执行 AI 新闻自动入库后的结果">
+</p>
+
+### 5. 对话记忆：合并已有偏好，而不是重复创建
+
+发送“短视频默认 9:16，所有视频先确认分镜”后，Agent 查到已有候选记忆，将默认比例从 `candidate` 合并升级为 `active`，同时更新“先分镜再生成”、视频流程、检查清单、来源页、MOC 与演化日志，没有新增重复 Memory。
+
+<p align="center">
+  <img src="docs/images/obsidian-real-memory-result.jpg" width="920" alt="真实对话后在 Obsidian 中激活的 9:16 偏好记忆">
+</p>
+
+### 6. 知识淘汰：只生成待审批 Proposal，不擅自删除
+
+发送“淘汰单图角色流程”但明确尚未批准后，Codex 只更新 `awaiting-approval` Proposal。旧知识、Bad Case、A/B 测试证据和 WikiLink 全部保留，没有移动、重命名或删除文件；替代方案继续指向 active 的多角度角色包流程。
+
+<p align="center">
+  <img src="docs/images/codex-real-retirement-result.png" width="1000" alt="Codex 真实执行 Proposal-only 淘汰请求后的结果">
+</p>
+
+<p align="center">
+  <img src="docs/images/obsidian-real-retirement-proposal.jpg" width="920" alt="真实对话后在 Obsidian 中生成的待审批淘汰 Proposal">
+</p>
+
+本轮实测最终结果：70 个受管 Markdown，Frontmatter 与 Sidecar 覆盖率 100%，断链 0，未知标签 0；Knowledge Lint 和 Doctor 均无错误，工作区保持 `READY`。
+
+### 7. Obsidian 最终效果：知识不是文件堆，而是可追踪的关系网
+
+三轮真实任务完成后，新增或更新的知识、来源、流程、记忆、案例与淘汰提案仍通过 WikiLink 连接。下面是同一 AI 素材 Demo 工作区的实际 Obsidian 全局关系图，而不是为了 README 单独生成的静态示意图。
+
+<p align="center">
+  <img src="docs/images/obsidian-real-knowledge-graph.jpg" width="1000" alt="完成真实自动入库记忆更新和淘汰提案后的 Obsidian 知识关系图">
 </p>
 
 ## 它解决什么问题
@@ -156,34 +220,3 @@ node .harness/.huajuan.mjs uninstall       # 选项式导出与安全卸载
 - 自动进化只能产生候选、Bad Case 和 Proposal；
 - 淘汰使用 `deprecated + superseded_by` 保留历史，不等于删除；
 - 文件系统中的 Markdown 和素材始终是唯一真实数据源。
-
-## 仓库结构
-
-```text
-huajuan-harness-cli/       # 发布包源模板
-scripts/                   # Hash 同步、Release 构建与解压验收
-tests/                     # CLI、Doctor、Dashboard、E2E 与 Release 测试
-docs/                      # 产品、技术、决策与发布说明
-```
-
-## 开发与发布
-
-```bash
-npm test
-npm run sync:hashes
-npm run build:release
-npm run verify:release
-```
-
-Release 校验会真实解压 ZIP，在一个含已有文件的中文工作区中运行父目录启动器，并验证 WorkBuddy、Doctor、首次 `BLOCKED` 和提前入库拒绝。
-
-最终用户只需要 Node.js 20+；从源码构建 Release 另外需要 Python 3，用于生成带标准 UTF-8 文件名标记的跨平台 ZIP。
-
-更多信息：
-
-- [产品需求](docs/PRODUCT-REQUIREMENTS.md)
-- [技术设计](docs/TECHNICAL-DESIGN.md)
-- [开发与验收](docs/DEVELOPMENT.md)
-- [产品决策与非目标](docs/DECISIONS.md)
-- [参考项目](docs/REFERENCES.md)
-- [v0.6.1 发布验收](docs/releases/v0.6.1.md)
