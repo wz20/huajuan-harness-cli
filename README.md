@@ -14,7 +14,7 @@
 
 ## 从打开 CLI 到知识库自动进化
 
-下面不是预置测试页或静态效果图，而是一条真实、完整的验收链路：在全新目录运行发布包完成安装，再把 CLI 生成的话术交给 Codex，连续验证自动入库、记忆更新和知识淘汰，最后在 Obsidian 检查实际文件与关系图谱。
+下面不是预置测试页或静态效果图，而是一条真实、完整的验收链路：在全新目录运行发布包完成安装，再用普通用户会说的话交给 Codex，连续验证自动入库、记忆更新和知识淘汰，最后在 Obsidian 检查实际文件与关系图谱。
 
 ### 1. 打开 CLI：自动识别所在工作区
 
@@ -42,7 +42,11 @@
 
 ### 4. 自动入库：先核验、再查重、最后更新
 
-发送三条 AI 新闻后，Codex 没有为演示重复造文件，而是复用并更新 12 个现有知识与索引文件。Veo 4 和 Seedance 3 因未找到对应官方发布证据保持 `review`；GPT Image 2 有官方发布页和 API 文档支持，保持 `active`。随后 Knowledge Lint、Doctor 和工作区 `READY` 状态全部通过。
+用户只需要说：
+
+> 帮我看看最近 AI 素材圈有什么值得关注的更新，整理进知识库。
+
+Harness 自动完成来源核验、重复检查、分类、关系更新和质量检查。Codex 没有重复造文件，而是复用并更新 12 个现有知识与索引文件。Veo 4 和 Seedance 3 因未找到对应官方发布证据保持 `review`；GPT Image 2 有官方发布页和 API 文档支持，保持 `active`。随后 Knowledge Lint、Doctor 和工作区 `READY` 状态全部通过。
 
 <p align="center">
   <img src="docs/images/codex-real-demo-result.png" width="1000" alt="Codex 真实执行 AI 新闻自动入库后的结果">
@@ -50,7 +54,11 @@
 
 ### 5. 对话记忆：合并已有偏好，而不是重复创建
 
-发送“短视频默认 9:16，所有视频先确认分镜”后，Agent 查到已有候选记忆，将默认比例从 `candidate` 合并升级为 `active`，同时更新“先分镜再生成”、视频流程、检查清单、来源页、MOC 与演化日志，没有新增重复 Memory。
+用户只需要说：
+
+> 以后做短视频默认用 9:16，先把分镜给我看看。
+
+Agent 会自动查找已有记忆、判断是否合并，将默认比例从 `candidate` 合并升级为 `active`，同时更新“先分镜再生成”、视频流程、检查清单、来源页、MOC 与演化日志，没有新增重复 Memory。
 
 <p align="center">
   <img src="docs/images/obsidian-real-memory-result.jpg" width="920" alt="真实对话后在 Obsidian 中激活的 9:16 偏好记忆">
@@ -58,7 +66,11 @@
 
 ### 6. 知识淘汰：只生成待审批 Proposal，不擅自删除
 
-发送“淘汰单图角色流程”但明确尚未批准后，Codex 只更新 `awaiting-approval` Proposal。旧知识、Bad Case、A/B 测试证据和 WikiLink 全部保留，没有移动、重命名或删除文件；替代方案继续指向 active 的多角度角色包流程。
+用户只需要说：
+
+> 单图角色的方案我不想再用了，后面改成多角度角色包吧。
+
+Agent 会自动判断这是一次淘汰意图，但不会擅自删除。它只更新 `awaiting-approval` Proposal；旧知识、Bad Case、A/B 测试证据和 WikiLink 全部保留，没有移动、重命名或删除文件；替代方案继续指向 active 的多角度角色包流程。
 
 <p align="center">
   <img src="docs/images/codex-real-retirement-result.png" width="1000" alt="Codex 真实执行 Proposal-only 淘汰请求后的结果">
