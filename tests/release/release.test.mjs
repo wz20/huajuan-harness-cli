@@ -8,7 +8,7 @@ import { REPOSITORY_ROOT } from '../helpers/workspace.mjs';
 
 const RELEASE_ROOT = path.join(REPOSITORY_ROOT, 'release');
 const PRODUCT_RELEASE = path.join(RELEASE_ROOT, 'Huajuan-Harness');
-const ZIP_RELEASE = path.join(RELEASE_ROOT, 'Huajuan-Harness-v0.6.1.zip');
+const ZIP_RELEASE = path.join(RELEASE_ROOT, 'Huajuan-Harness-v0.6.2.zip');
 const EXPECTED_TOP_LEVEL = [
   '.harness',
   '打开花卷控制台.html',
@@ -79,6 +79,12 @@ test('release builder emits a verified runtime-only directory and ZIP', async t 
   await access(ZIP_RELEASE);
   assert.deepEqual((await readdir(PRODUCT_RELEASE)).sort(), [...EXPECTED_TOP_LEVEL].sort());
 
+  const windowsLauncher = await readFile(path.join(PRODUCT_RELEASE, '花卷初始化器-Windows.cmd'));
+  const windowsLauncherSource = windowsLauncher.toString('utf8');
+  assert.match(windowsLauncherSource, /\r\n/, 'Release 中的 Windows 启动器缺少 CRLF 换行');
+  assert.doesNotMatch(windowsLauncherSource, /(?<!\r)\n/, 'Release 中的 Windows 启动器包含单独 LF 换行');
+  assert.doesNotMatch(windowsLauncherSource, /powershell(?:\.exe)?/i, 'Windows 启动器不应额外依赖 PowerShell');
+
   const relativeNames = await collectRelativeNames(PRODUCT_RELEASE);
   assert.deepEqual(relativeNames.filter(relative => FORBIDDEN_NAMES.has(path.basename(relative))), []);
 
@@ -86,6 +92,6 @@ test('release builder emits a verified runtime-only directory and ZIP', async t 
   assert.doesNotMatch(dashboard, new RegExp(REPOSITORY_ROOT.replaceAll(/[.*+?^${}()|[\]\\]/g, '\\$&')));
 
   const marker = JSON.parse(await readFile(path.join(PRODUCT_RELEASE, '.harness', '.huajuan.json'), 'utf8'));
-  assert.equal(marker.version, '0.6.1');
+  assert.equal(marker.version, '0.6.2');
   assert.ok(Object.keys(marker.managedHashes).length >= 30);
 });

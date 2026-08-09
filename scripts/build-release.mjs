@@ -8,7 +8,7 @@ const repositoryRoot = path.resolve(scriptRoot, '..');
 const sourceProduct = path.join(repositoryRoot, 'huajuan-harness-cli');
 const releaseRoot = path.join(repositoryRoot, 'release');
 const releaseProduct = path.join(releaseRoot, 'Huajuan-Harness');
-const releaseZip = path.join(releaseRoot, 'Huajuan-Harness-v0.6.1.zip');
+const releaseZip = path.join(releaseRoot, 'Huajuan-Harness-v0.6.2.zip');
 const releaseAllowlist = [
   '.harness',
   '花卷初始化器.app',

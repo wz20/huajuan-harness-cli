@@ -9,7 +9,7 @@ const scriptRoot = path.dirname(fileURLToPath(import.meta.url));
 const repositoryRoot = path.resolve(scriptRoot, '..');
 const releaseRoot = path.join(repositoryRoot, 'release');
 const releaseProduct = path.join(releaseRoot, 'Huajuan-Harness');
-const releaseZip = path.join(releaseRoot, 'Huajuan-Harness-v0.6.1.zip');
+const releaseZip = path.join(releaseRoot, 'Huajuan-Harness-v0.6.2.zip');
 const harnessRoot = path.join(releaseProduct, '.harness');
 const expectedTopLevel = [
   '.harness',
@@ -109,6 +109,15 @@ for (const relative of requiredRuntimePaths) {
   await access(path.join(releaseProduct, relative)).catch(() => fail(`缺少运行文件 ${relative}`));
 }
 
+const windowsLauncher = await readFile(path.join(releaseProduct, '花卷初始化器-Windows.cmd'));
+const windowsLauncherSource = windowsLauncher.toString('utf8');
+if (!windowsLauncherSource.includes('\r\n') || /(?<!\r)\n/.test(windowsLauncherSource)) {
+  fail('Windows 启动器必须完整使用 CRLF 换行。');
+}
+if (/powershell(?:\.exe)?/i.test(windowsLauncherSource)) {
+  fail('Windows 启动器包含未声明的 PowerShell 依赖。');
+}
+
 if (process.platform !== 'win32') {
   for (const relative of [
     '花卷初始化器-macOS.command',
@@ -121,7 +130,7 @@ if (process.platform !== 'win32') {
 }
 
 const marker = JSON.parse(await readFile(path.join(harnessRoot, '.huajuan.json'), 'utf8'));
-if (marker.product !== 'huajuan-harness' || marker.version !== '0.6.1' || marker.schema !== 4 || marker.harnessRoot !== '.harness') {
+if (marker.product !== 'huajuan-harness' || marker.version !== '0.6.2' || marker.schema !== 4 || marker.harnessRoot !== '.harness') {
   fail('Marker 产品、版本、Schema 或 Harness 根目录无效。');
 }
 const dynamicManagedFiles = new Set(['dashboard.html']);
