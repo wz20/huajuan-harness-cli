@@ -1,5 +1,6 @@
 * text=auto eol=lf
-*.cmd text eol=crlf
+# Keep CRLF bytes in the Git object so GitHub source ZIPs and Release ZIPs are identical.
+*.cmd binary
 *.command text eol=lf
 *.sh text eol=lf
 *.png binary

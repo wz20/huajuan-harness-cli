@@ -1,6 +1,6 @@
 {
   "product": "huajuan-harness",
-  "version": "0.6.1",
+  "version": "0.6.2",
   "schema": 4,
   "harnessRoot": ".harness",
   "runtimeFiles": [

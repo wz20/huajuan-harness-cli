@@ -1,47 +1,54 @@
 @echo off
 setlocal EnableExtensions DisableDelayedExpansion
+title Huajuan Harness CLI
 chcp 65001 >nul
 cd /d "%~dp0"
 
 if not exist ".harness\.huajuan.json" (
-  echo 初始化器当前目录缺少完整的 .harness。请保持 Release 文件结构不变。
-  pause
+  echo [ERROR] 未找到完整的 .harness。
+  echo 请先解压整个 Huajuan-Harness ZIP，再双击本脚本。
+  if not defined HUAJUAN_NO_PAUSE pause
   exit /b 1
 )
 if not exist ".harness\.huajuan.mjs" (
-  echo Huajuan CLI 缺失。
-  pause
+  echo [ERROR] Huajuan CLI 文件缺失，请重新下载并完整解压。
+  if not defined HUAJUAN_NO_PAUSE pause
   exit /b 1
 )
 
-powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "$marker = Get-Content -Raw -LiteralPath '.harness\.huajuan.json' | ConvertFrom-Json; if ($marker.product -ne 'huajuan-harness') { exit 1 }"
+where node >nul 2>&1
 if errorlevel 1 (
-  echo 当前 .harness 不是 Huajuan Harness。
-  pause
+  echo [ERROR] 未找到 Node.js 20 或更高版本。
+  echo 安装 Node.js 后，请关闭本窗口并重新双击启动器。
+  if not defined HUAJUAN_NO_PAUSE pause
   exit /b 1
 )
 
-set "NODE="
-for /f "delims=" %%N in ('where node 2^>nul') do if not defined NODE set "NODE=%%N"
-if not defined NODE (
-  echo 未找到 Node.js 20+。请安装后重试。
-  pause
+node -e "const marker=require('./.harness/.huajuan.json');process.exit(marker.product==='huajuan-harness'?0:1)"
+if errorlevel 1 (
+  echo [ERROR] 当前 .harness 不是有效的 Huajuan Harness。
+  if not defined HUAJUAN_NO_PAUSE pause
   exit /b 1
 )
 
-set "NODE_MAJOR=0"
-for /f "delims=" %%V in ('"%NODE%" -p "process.versions.node.split('.')[0]"') do set "NODE_MAJOR=%%V"
+set "NODE_MAJOR="
+for /f "delims=" %%V in ('node -p "process.versions.node.split('.')[0]" 2^>nul') do set "NODE_MAJOR=%%V"
+if not defined NODE_MAJOR (
+  echo [ERROR] 无法读取 Node.js 版本。
+  if not defined HUAJUAN_NO_PAUSE pause
+  exit /b 1
+)
 if %NODE_MAJOR% LSS 20 (
-  echo Node.js 版本过低，需要 20 或更高版本。
-  pause
+  echo [ERROR] Node.js 版本过低，当前为 %NODE_MAJOR%，需要 20 或更高版本。
+  if not defined HUAJUAN_NO_PAUSE pause
   exit /b 1
 )
 
 if defined HUAJUAN_INIT_ANSWERS_FILE (
-  "%NODE%" ".harness\.huajuan.mjs" install-parent --answers "%HUAJUAN_INIT_ANSWERS_FILE%"
+  node ".harness\.huajuan.mjs" install-parent --answers "%HUAJUAN_INIT_ANSWERS_FILE%"
 ) else (
-  "%NODE%" ".harness\.huajuan.mjs" install-parent
+  node ".harness\.huajuan.mjs" install-parent
 )
 set "EXIT_CODE=%ERRORLEVEL%"
-pause
+if not defined HUAJUAN_NO_PAUSE pause
 exit /b %EXIT_CODE%

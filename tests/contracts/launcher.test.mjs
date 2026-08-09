@@ -14,7 +14,7 @@ const LAUNCHERS = [
 
 test('macOS application bundle reports the current release version', async () => {
   const plist = await readFile(path.join(PRODUCT_ROOT, '花卷初始化器.app', 'Contents', 'Info.plist'), 'utf8');
-  assert.match(plist, /<key>CFBundleShortVersionString<\/key><string>0\.6\.1<\/string>/);
+  assert.match(plist, /<key>CFBundleShortVersionString<\/key><string>0\.6\.2<\/string>/);
 });
 
 test('launchers infer the current product root and never ask for a workspace path', async () => {
@@ -30,6 +30,20 @@ test('visible launcher commands do not pass --workspace', async () => {
     const source = await readFile(path.join(PRODUCT_ROOT, relative), 'utf8');
     assert.doesNotMatch(source, /--workspace/, relative);
   }
+});
+
+test('Windows launcher uses CRLF so cmd.exe can parse the downloaded script reliably', async () => {
+  const launcher = await readFile(path.join(PRODUCT_ROOT, '花卷初始化器-Windows.cmd'));
+  const source = launcher.toString('utf8');
+  assert.match(source, /\r\n/, 'Windows 启动器缺少 CRLF 换行');
+  assert.doesNotMatch(source, /(?<!\r)\n/, 'Windows 启动器包含 cmd.exe 不稳定支持的 LF 换行');
+});
+
+test('Windows launcher depends only on Node.js and not PowerShell', async () => {
+  const source = await readFile(path.join(PRODUCT_ROOT, '花卷初始化器-Windows.cmd'), 'utf8');
+  assert.doesNotMatch(source, /powershell(?:\.exe)?/i);
+  assert.match(source, /\.huajuan\.json/);
+  assert.match(source, /process\.versions\.node/);
 });
 
 async function runLauncher(file, env) {
