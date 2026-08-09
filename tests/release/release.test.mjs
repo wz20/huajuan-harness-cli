@@ -8,7 +8,7 @@ import { REPOSITORY_ROOT } from '../helpers/workspace.mjs';
 
 const RELEASE_ROOT = path.join(REPOSITORY_ROOT, 'release');
 const PRODUCT_RELEASE = path.join(RELEASE_ROOT, 'Huajuan-Harness');
-const ZIP_RELEASE = path.join(RELEASE_ROOT, 'Huajuan-Harness-v0.6.2.zip');
+const ZIP_RELEASE = path.join(RELEASE_ROOT, 'Huajuan-Harness-v0.6.3.zip');
 const EXPECTED_TOP_LEVEL = [
   '.harness',
   '打开花卷控制台.html',
@@ -24,6 +24,8 @@ const FORBIDDEN_NAMES = new Set([
   'package.json',
   'scripts',
   'tests',
+  'AGENT_INSTALL.md',
+  'agent-install.json',
 ]);
 const execFileAsync = promisify(execFile);
 
@@ -92,6 +94,6 @@ test('release builder emits a verified runtime-only directory and ZIP', async t 
   assert.doesNotMatch(dashboard, new RegExp(REPOSITORY_ROOT.replaceAll(/[.*+?^${}()|[\]\\]/g, '\\$&')));
 
   const marker = JSON.parse(await readFile(path.join(PRODUCT_RELEASE, '.harness', '.huajuan.json'), 'utf8'));
-  assert.equal(marker.version, '0.6.2');
+  assert.equal(marker.version, '0.6.3');
   assert.ok(Object.keys(marker.managedHashes).length >= 30);
 });

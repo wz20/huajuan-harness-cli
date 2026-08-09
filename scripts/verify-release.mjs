@@ -9,7 +9,7 @@ const scriptRoot = path.dirname(fileURLToPath(import.meta.url));
 const repositoryRoot = path.resolve(scriptRoot, '..');
 const releaseRoot = path.join(repositoryRoot, 'release');
 const releaseProduct = path.join(releaseRoot, 'Huajuan-Harness');
-const releaseZip = path.join(releaseRoot, 'Huajuan-Harness-v0.6.2.zip');
+const releaseZip = path.join(releaseRoot, 'Huajuan-Harness-v0.6.3.zip');
 const harnessRoot = path.join(releaseProduct, '.harness');
 const expectedTopLevel = [
   '.harness',
@@ -130,7 +130,7 @@ if (process.platform !== 'win32') {
 }
 
 const marker = JSON.parse(await readFile(path.join(harnessRoot, '.huajuan.json'), 'utf8'));
-if (marker.product !== 'huajuan-harness' || marker.version !== '0.6.2' || marker.schema !== 4 || marker.harnessRoot !== '.harness') {
+if (marker.product !== 'huajuan-harness' || marker.version !== '0.6.3' || marker.schema !== 4 || marker.harnessRoot !== '.harness') {
   fail('Marker 产品、版本、Schema 或 Harness 根目录无效。');
 }
 const dynamicManagedFiles = new Set(['dashboard.html']);

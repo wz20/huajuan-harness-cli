@@ -1,0 +1,75 @@
+{
+  "schema": "huajuan-agent-install/v1",
+  "product": "huajuan-harness",
+  "repository": "https://github.com/wz20/huajuan-harness-cli",
+  "protocol": "AGENT_INSTALL.md",
+  "requirements": {
+    "nodeMajor": 20,
+    "network": true,
+    "terminal": true
+  },
+  "release": {
+    "api": "https://api.github.com/repos/wz20/huajuan-harness-cli/releases/latest",
+    "asset": "Huajuan-Harness-latest.zip",
+    "requireDigest": "sha256"
+  },
+  "workspace": {
+    "target": "agent-current-working-directory",
+    "packageDirectory": "Huajuan-Harness",
+    "unknownHarnessPolicy": "stop-without-overwrite",
+    "existingHuajuanPolicy": "continue-with-installed-version"
+  },
+  "install": {
+    "entrypoint": "Huajuan-Harness/.harness/.huajuan.mjs",
+    "command": [
+      "install-parent",
+      "--answers",
+      "{answersFile}"
+    ],
+    "answerFields": {
+      "freeText": [
+        "ownerName",
+        "workspaceName",
+        "notes"
+      ],
+      "mode": [
+        "knowledge-base",
+        "workspace",
+        "hybrid"
+      ],
+      "agents": [
+        "claude-code",
+        "codex",
+        "cursor",
+        "trae",
+        "workbuddy",
+        "generic"
+      ],
+      "protectedPaths": "existing-workspace-relative-paths-only",
+      "evolutionEnabled": [
+        true,
+        false
+      ]
+    }
+  },
+  "postInstall": {
+    "requiredStatus": "awaiting-agent",
+    "knowledgeReadiness": "blocked",
+    "continueWith": ".harness/AGENT_INIT.md",
+    "commands": [
+      [
+        "node",
+        ".harness/.huajuan.mjs",
+        "doctor",
+        "--json"
+      ],
+      [
+        "node",
+        ".harness/.huajuan.mjs",
+        "knowledge",
+        "status",
+        "--json"
+      ]
+    ]
+  }
+}
