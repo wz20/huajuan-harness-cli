@@ -140,6 +140,21 @@ Proposal 永不自动应用，资产永不自动删除；高风险文件操作�
 
 ## 快速开始
 
+### 方式一：直接让 Agent 安装（推荐）
+
+先让 Codex、Claude Code、Cursor、Trae 或 WorkBuddy 打开你的目标工作区，然后把下面这句话发给它：
+
+```text
+把 Huajuan Harness 安装到当前工作区，并按推荐方式帮我完成初始化：
+https://github.com/wz20/huajuan-harness-cli
+```
+
+Agent 会按照仓库中的 [`AGENT_INSTALL.md`](AGENT_INSTALL.md) 和 [`agent-install.json`](agent-install.json)，只读检查当前目录，展示一次推荐配置供你确认，下载并校验最新 Release，然后调用与启动器相同的安装内核。安装后它会在当前会话继续执行 `AGENT_INIT`，不需要你再复制第二段提示词。
+
+Agent 必须使用 Release ZIP，不能把源码仓库克隆进知识库；发现未知 `.harness`、摘要不一致或权限不足时必须停止，不能覆盖或假装安装成功。
+
+### 方式二：下载 ZIP，运行启动器
+
 ### 1. 下载
 
 [直接下载最新版 ZIP](https://github.com/wz20/huajuan-harness-cli/releases/latest/download/Huajuan-Harness-latest.zip)

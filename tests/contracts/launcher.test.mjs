@@ -14,7 +14,7 @@ const LAUNCHERS = [
 
 test('macOS application bundle reports the current release version', async () => {
   const plist = await readFile(path.join(PRODUCT_ROOT, '花卷初始化器.app', 'Contents', 'Info.plist'), 'utf8');
-  assert.match(plist, /<key>CFBundleShortVersionString<\/key><string>0\.6\.2<\/string>/);
+  assert.match(plist, /<key>CFBundleShortVersionString<\/key><string>0\.6\.3<\/string>/);
 });
 
 test('launchers infer the current product root and never ask for a workspace path', async () => {
