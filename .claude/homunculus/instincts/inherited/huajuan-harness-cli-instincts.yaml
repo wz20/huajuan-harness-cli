@@ -1,0 +1,106 @@
+# Instincts generated from https://github.com/wz20/huajuan-harness-cli
+# Generated: 2026-08-08T11:10:04.232Z
+# Version: 2.0
+# NOTE: This file supplements (does not replace) any existing curated instincts.
+# High-confidence manually curated instincts should be preserved alongside these.
+
+---
+id: huajuan-harness-cli-commit-length
+trigger: "when writing a commit message"
+confidence: 0.6
+domain: git
+source: repo-analysis
+source_repo: https://github.com/wz20/huajuan-harness-cli
+---
+
+# Huajuan Harness Cli Commit Length
+
+## Action
+
+Keep commit messages concise (~13 characters)
+
+## Evidence
+
+- Average commit message length: 13 chars
+- Based on 1 commits
+
+---
+id: huajuan-harness-cli-naming-files
+trigger: "when creating a new file"
+confidence: 0.8
+domain: code-style
+source: repo-analysis
+source_repo: https://github.com/wz20/huajuan-harness-cli
+---
+
+# Huajuan Harness Cli Naming Files
+
+## Action
+
+Use kebab-case naming convention
+
+## Evidence
+
+- Analyzed file naming patterns in repository
+- Dominant pattern: kebab-case
+
+---
+id: huajuan-harness-cli-import-relative
+trigger: "when importing modules"
+confidence: 0.75
+domain: code-style
+source: repo-analysis
+source_repo: https://github.com/wz20/huajuan-harness-cli
+---
+
+# Huajuan Harness Cli Import Relative
+
+## Action
+
+Use relative imports for project files
+
+## Evidence
+
+- Import analysis shows relative import pattern
+- Example: import { x } from '../lib/x'
+
+---
+id: huajuan-harness-cli-export-style
+trigger: "when exporting from a module"
+confidence: 0.7
+domain: code-style
+source: repo-analysis
+source_repo: https://github.com/wz20/huajuan-harness-cli
+---
+
+# Huajuan Harness Cli Export Style
+
+## Action
+
+Prefer named exports
+
+## Evidence
+
+- Export pattern analysis
+- Dominant style: named
+
+---
+id: huajuan-harness-cli-test-separate
+trigger: "when writing tests"
+confidence: 0.8
+domain: testing
+source: repo-analysis
+source_repo: https://github.com/wz20/huajuan-harness-cli
+---
+
+# Huajuan Harness Cli Test Separate
+
+## Action
+
+Place tests in the tests/ or __tests__/ directory, mirroring src structure
+
+## Evidence
+
+- Separate test directory pattern detected
+- Tests live in dedicated test folders
+
